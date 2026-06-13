@@ -5,6 +5,7 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.deepseek.DeepSeekChatModel;
 import org.springframework.ai.deepseek.DeepSeekChatOptions;
+import org.springframework.ai.zhipuai.ZhiPuAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +21,25 @@ public class ChatCtrl {
     @Autowired
     private DeepSeekChatModel chatModel;
 
+    @Autowired
+    private ZhiPuAiEmbeddingModel embeddingModel;
+
+    /**
+     * 简单会话
+     * @param message
+     * @return
+     */
     @GetMapping("/chat")
     public String chat(@RequestParam(defaultValue = "你好，简单介绍一下你自己") String message) {
         return chatModel.call(message);
     }
 
+    /**
+     * 流式会话
+     * @param message
+     * @param response
+     * @return
+     */
     @GetMapping(value = "/stream")
     public Flux<String> stream(@RequestParam(defaultValue = "你好，用三句话介绍一下 Spring AI")
                                             String message, HttpServletResponse response) {
@@ -40,6 +55,27 @@ public class ChatCtrl {
        return resp;
     }
 
+    /**
+     * 文本向量化
+     * @param message
+     * @return
+     */
+    @GetMapping("/embedding")
+    public float[] embedding(@RequestParam(defaultValue = "你好，智谱 AI") String message) {
+        return embeddingModel.embed(message);
+    }
+
+    /**
+     * 参数设置
+     *
+     * @param subject
+     * @param style
+     * @param temperature
+     * @param topP
+     * @param maxTokens
+     * @param model
+     * @return
+     */
     @GetMapping("/poem")
     public String poem(@RequestParam(defaultValue = "春天") String subject,
                        @RequestParam(defaultValue = "七言绝句") String style,
