@@ -5,7 +5,6 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.deepseek.DeepSeekChatModel;
 import org.springframework.ai.deepseek.DeepSeekChatOptions;
-import org.springframework.ai.zhipuai.ZhiPuAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +19,6 @@ import java.util.function.Function;
 public class ChatCtrl {
     @Autowired
     private DeepSeekChatModel chatModel;
-
-    @Autowired
-    private ZhiPuAiEmbeddingModel embeddingModel;
 
     /**
      * 简单会话
@@ -53,16 +49,6 @@ public class ChatCtrl {
             }
         });
        return resp;
-    }
-
-    /**
-     * 文本向量化
-     * @param message
-     * @return
-     */
-    @GetMapping("/embedding")
-    public float[] embedding(@RequestParam(defaultValue = "你好，智谱 AI") String message) {
-        return embeddingModel.embed(message);
     }
 
     /**
